@@ -72,4 +72,4 @@ for (const dep in organization) {
 };
 
 console.log(JSON.stringify(organization, null, 2));
-console.log(JSON.stringify(result, null, 2));
+console.log(JSON.stringify(result, null, 3));
