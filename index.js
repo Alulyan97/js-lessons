@@ -39,34 +39,39 @@ const ratingsData = {
   ratings: [
     { productCode: "PROD-001", score: 4.8, reviews: 125 },
     { productCode: "PROD-002", score: 4.5, reviews: 89 },
-    { productCode: "PROD-004", score: 4.2, reviews: 67 }
+    { productCode: "PROD-003", score: 4.2, reviews: 67 }
   ]
 };
 
 function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
-
-    for (const items of stockData.warehouse.items) { 
-        if (stockData.warehouse.items && stockData.warehouse.items.length)
-            items.id = items.id.replaceAll('-', ''), 
-                items.id = items.id.toLowerCase()
-                    for (const desc of descriptionsData.descriptions) {
-                        if (descriptionsData.descriptions && descriptionsData.descriptions.length)
-                        if (desc.productId === "PROD-001") {
-                            desc.fullDescription = desc.fullDescription.replace("- модель 2024 года", "").trim()
-                                } else if (desc.productId === "PROD-002") { 
-                                desc.fullDescription = desc.fullDescription.replace("- версия Pro", "").trim()
-                                }
-                            } 
-                                for (const product of productsData.productName) {
-                                    if (productsData.productName && productsData.productName.length)
-                                    product.categoryType = product.categoryType.toLowerCase();
-                                        if (product.itemId === "PROD-001") {
-                                            product.productName = product.productName.replace("2024", "").trim();  
-                                        }
-                                    }
-                };
-
-        const quantityInStock = stockData.warehouse.items.filter(item => item.quantity > 0);
+    if (stockData.warehouse.items && stockData.warehouse.items.length) {
+        for (const item of stockData.warehouse.items) { 
+            item.id = item.id.replaceAll('-', '');
+            item.id = item.id.toLowerCase();
+        }
+    }
+    
+    if (descriptionsData.descriptions && descriptionsData.descriptions.length) {
+        for (const desc of descriptionsData.descriptions) {
+            if (desc.productId === "PROD-001") {
+                desc.fullDescription = desc.fullDescription.replace("- модель 2024 года", "").trim();
+            } else if (desc.productId === "PROD-002") { 
+                desc.fullDescription = desc.fullDescription.replace("- версия Pro", "").trim();
+            }
+        }
+    }
+    
+    if (productsData.productName && productsData.productName.length) {
+        for (const product of productsData.productName) {
+            product.categoryType = product.categoryType.toLowerCase();
+            if (product.itemId === "PROD-001") {
+                product.productName = product.productName.replace("2024", "").trim();  
+            }
+        }
+    }
+    
+    const quantityInStock = stockData.warehouse.items.filter(item => item.quantity > 0);
+    
     return {
         productsData,
         descriptionsData,
@@ -77,4 +82,23 @@ function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
 };
 
 const catalog = createCatalog(productsData, descriptionsData, stockData, ratingsData);
-// console.log(JSON.stringify(catalog, null, 2));
+
+const catalogProducts = [];
+
+productsData.productName.forEach(product => {
+  catalogProducts.push({
+      id: product.itemId,
+      name: product.productName,
+      fullName: `${product.productName} 2024`,
+      price: product.priceValue,
+      category: product.categoryType
+    })
+  }
+);
+
+if (catalog.descriptionsData.descriptions && catalog.descriptionsData.descriptions.length)
+  for (const descript of catalog.descriptionsData) {
+    if (descript.descriptions.productId === prices.id) {
+      description: prices.fullDescription
+    }
+  };
