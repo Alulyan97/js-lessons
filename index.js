@@ -49,7 +49,7 @@ function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
             item.id = item.id.replaceAll('-', '');
             item.id = item.id.toLowerCase();
         }
-    }
+    };
     
     if (descriptionsData.descriptions && descriptionsData.descriptions.length) {
         for (const desc of descriptionsData.descriptions) {
@@ -59,7 +59,7 @@ function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
                 desc.fullDescription = desc.fullDescription.replace("- версия Pro", "").trim();
             }
         }
-    }
+    };
     
     if (productsData.productName && productsData.productName.length) {
         for (const product of productsData.productName) {
@@ -68,7 +68,7 @@ function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
                 product.productName = product.productName.replace("2024", "").trim();  
             }
         }
-    }
+    };
     
     const quantityInStock = stockData.warehouse.items.filter(item => item.quantity > 0);
     
@@ -85,7 +85,7 @@ const catalog = createCatalog(productsData, descriptionsData, stockData, ratings
 
 const catalogProducts = [];
 
-productsData.productName.forEach(product => {
+catalog.productsData.productName.forEach(product => {
   catalogProducts.push({
       id: product.itemId,
       name: product.productName,
@@ -96,9 +96,20 @@ productsData.productName.forEach(product => {
   }
 );
 
-if (catalog.descriptionsData.descriptions && catalog.descriptionsData.descriptions.length)
-  for (const descript of catalog.descriptionsData) {
-    if (descript.descriptions.productId === prices.id) {
-      description: prices.fullDescription
+if (catalog.descriptionsData?.descriptions?.length) {
+    for (const description of catalog.descriptionsData.descriptions) {
+        const product = catalogProducts.find(p => p.id === description.productId);
+        if (product) {
+            product.description = description.fullDescription;
+        }
     }
-  };
+};
+
+// if (stockData.warehouse.items && stockData.warehouse.items.length) {
+//     for (const stock of stockData.warehouse.items) {
+//         const stocks = catalogProducts.find(s => quantity > 0);
+//         if (stocks) {
+//             product.description = description.fullDescription;
+//         }
+//     }
+// }
