@@ -43,30 +43,41 @@ const ratingsData = {
   ]
 };
 
-function modifiedСreateCatalog(productsData, descriptionsData, stockData, ratingsData) {
+function phoneCatalog(productsData, descriptionsData, stockData, ratingsData) {
+    const removeProdPrefix = (id) => id.split('PROD-')[1];
+
     if (stockData.warehouse.items && stockData.warehouse.items.length) {
         for (const item of stockData.warehouse.items) { 
-            item.id = item.id.replaceAll('-', '');
-            item.id = item.id.toLowerCase();
+            item.id = removeProdPrefix(item.id);
         }
     };
     
     if (descriptionsData.descriptions && descriptionsData.descriptions.length) {
         for (const desc of descriptionsData.descriptions) {
-            if (desc.productId === "PROD-001") {
-                desc.fullDescription = desc.fullDescription.replace("- модель 2024 года", "").trim();
-            } else if (desc.productId === "PROD-002") { 
-                desc.fullDescription = desc.fullDescription.replace("- версия Pro", "").trim();
+            desc.productId = removeProdPrefix(desc.productId);
+            
+            if (desc.productId === "001") {
+                desc.fullDescription = desc.fullDescription.split("-")[0];
+            } else if (desc.productId === "002") { 
+                desc.fullDescription = desc.fullDescription.split("-")[0];
             }
         }
     };
     
     if (productsData.productName && productsData.productName.length) {
         for (const product of productsData.productName) {
+            product.itemId = removeProdPrefix(product.itemId);
             product.categoryType = product.categoryType.toLowerCase();
-            if (product.itemId === "PROD-001") {
-                product.productName = product.productName.replace("2024", "").trim();  
+            
+            if (product.itemId === "001") {
+                product.productName = product.productName.split("2024")[0];  
             }
+        }
+    };
+    
+    if (ratingsData.ratings && ratingsData.ratings.length) {
+        for (const rating of ratingsData.ratings) {
+            rating.productCode = removeProdPrefix(rating.productCode);
         }
     };
     
@@ -81,27 +92,37 @@ function modifiedСreateCatalog(productsData, descriptionsData, stockData, ratin
     }
 };
 
-const catalog = modifiedСreateCatalog(productsData, descriptionsData, stockData, ratingsData);
+const modifiedCreateCatalog = phoneCatalog(productsData, descriptionsData, stockData, ratingsData);
 
-function createCatalog(catalog) {}
+function CreateCatalog(phoneCatalog) {
+  const catalogProducts = [];
 
-catalog.productsData.productName.forEach(product => {
-  catalogProducts.push({
+  phoneCatalog.productsData.productName.forEach(product => {
+    const stockItem = phoneCatalog.stockData.warehouse.items.find(item => item.id === product.itemId);
+    const inStock = stockItem && stockItem.quantity > 0;
+    const quantity = stockItem ? stockItem.quantity : 0;
+
+    const ratingItem = phoneCatalog.ratingsData.ratings.find(rating => rating.productCode === product.itemId);
+    const rating = ratingItem ? ratingItem.score : 0;
+    const reviews = ratingItem ? ratingItem.reviews : 0;
+    
+    catalogProducts.push({
       id: product.itemId,
       name: product.productName,
-      fullName: `${product.productName} 2024`,
+      fullName: product.productName,
       price: product.priceValue,
-      category: product.categoryType
+      category: product.categoryType,
+      inStock: inStock,
+      quantity: quantity,
+      rating: rating,
+      reviews: reviews
     })
-  }
-);
+  })
 
-if (catalog.descriptionsData?.descriptions?.length) {
-    for (const description of catalog.descriptionsData.descriptions) {
-        const product = catalogProducts.find(p => p.id === description.productId);
-        if (product) {
-            product.description = description.fullDescription;
-        }
-    }
+  return catalogProducts;
+
 };
 
+const catalog = CreateCatalog(modifiedCreateCatalog);
+
+console.log(catalog);
