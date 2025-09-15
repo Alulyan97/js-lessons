@@ -43,7 +43,7 @@ const ratingsData = {
   ]
 };
 
-function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
+function modifiedСreateCatalog(productsData, descriptionsData, stockData, ratingsData) {
     if (stockData.warehouse.items && stockData.warehouse.items.length) {
         for (const item of stockData.warehouse.items) { 
             item.id = item.id.replaceAll('-', '');
@@ -81,9 +81,9 @@ function createCatalog(productsData, descriptionsData, stockData, ratingsData) {
     }
 };
 
-const catalog = createCatalog(productsData, descriptionsData, stockData, ratingsData);
+const catalog = modifiedСreateCatalog(productsData, descriptionsData, stockData, ratingsData);
 
-const catalogProducts = [];
+function createCatalog(catalog) {}
 
 catalog.productsData.productName.forEach(product => {
   catalogProducts.push({
@@ -105,11 +105,3 @@ if (catalog.descriptionsData?.descriptions?.length) {
     }
 };
 
-// if (stockData.warehouse.items && stockData.warehouse.items.length) {
-//     for (const stock of stockData.warehouse.items) {
-//         const stocks = catalogProducts.find(s => quantity > 0);
-//         if (stocks) {
-//             product.description = description.fullDescription;
-//         }
-//     }
-// }
