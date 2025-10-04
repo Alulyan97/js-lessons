@@ -893,17 +893,6 @@ function searchBooks(data, filters, page, limit) {
           error = `${error.errorMessage} number`
         }
       }
-
-      if(filters?.birthYear || filters?.deathYear) {
-        if(!Array.isArray(filters.tags)) {
-          error = `${error.errorMessage} tags not array`
-        } else {
-          let checkTypeOfArrayTags = filters.tags.every(item => typeof item === 'string');             
-          if (!checkTypeOfArrayTags) {
-               error = `${error.errorMessage} tags has not string in array`
-          }
-        }
-      }
       
       if(filters?.searchText) {
         if(typeof filters.notes !== "string") {
@@ -914,11 +903,11 @@ function searchBooks(data, filters, page, limit) {
     } catch (error) {
           console.log("Возникла ошибка!");
           return [];
-          }
+        }
   }
 
 
 
-searchBooks(libraryData, {genre: ["fantasy", "epic"], tags: ["classic", "epic"], 
-  minPages: 100, maxPages: 1500, minRating: 4.0, language: "English", 
-  yearRange: [1800, 1900], searchText: "Hogwarts"})
+// searchBooks(libraryData, {genre: [], tags: [], 
+//   minPages: , maxPages: , minRating: , language: , 
+//   yearRange: [], searchText: })
