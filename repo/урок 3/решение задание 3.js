@@ -835,13 +835,6 @@ function searchBooks(data, filters, page, limit) {
         errorMessage: 'ошибка поля'
       };
       
-      
-      if(filters?.language) {
-        if(typeof filters.language !== "string") {
-          error = `${error.errorMessage} language`
-        }
-      }
-
       if(filters?.genre) {
         if(!Array.isArray(filters.genre)) {
           error = `${error.errorMessage} genre not array`
@@ -864,41 +857,41 @@ function searchBooks(data, filters, page, limit) {
         }
       }
 
-      if(filters?.searchText) {
-        if(!Array.isArray(filters.tags)) {
-          error = `${error.errorMessage} tags not array`
-        } else {
-          let checkTypeOfArrayTags = filters.tags.every(item => typeof item === 'string');             
-          if (!checkTypeOfArrayTags) {
-               error = `${error.errorMessage} tags has not string in array`
+      if(filters?.pages) {
+        if(typeof filters.pages !== "number") {
+          error = `${error.errorMessage} pages has not number in object`
+        }
+      }
+
+      if(filters?.rating) {
+        if(typeof filters.rating !== "number") {
+          error = `${error.errorMessage} rating has not number in object`
+        }
+      }
+
+      if(filters?.language) {
+        if(typeof filters.language !== "string") {
+          error = `${error.errorMessage} language has not string in object`
+        }
+      }
+
+      if(filters?.birthYear || filters?.deathYear) {
+        if(typeof filters.birthYear !== "number" 
+          || typeof filters.deathYear !== "number") {
+          error = `${error.errorMessage} year has not number in object`
+        }
+      }
+      
+      
+      if(filters?.title || filters?.notes) {
+        if(typeof filters.title !== "string") {
+          if(typeof filters.notes !== "string") {
+          error = `${error.errorMessage} title and notes has not string in object`
           }
         }
       }
 
-      if(filters?.minPages) {
-        if(typeof filters.pages !== "number") {
-          error = `${error.errorMessage} number`
-        }
-      }
-      
-      if(filters?.maxPages) {
-        if(typeof filters.pages !== "number") {
-          error = `${error.errorMessage} number`
-        }
-      }
-
-      if(filters?.minRating) {
-        if(typeof filters.birthYear !== "number" 
-          && typeof filters.deathYear !== "number") {
-          error = `${error.errorMessage} number`
-        }
-      }
-      
-      if(filters?.searchText) {
-        if(typeof filters.notes !== "string") {
-          error = `${error.errorMessage} string`
-        }
-      }
+      return error
 
     } catch (error) {
           console.log("Возникла ошибка!");
