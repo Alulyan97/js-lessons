@@ -837,60 +837,77 @@ function searchBooks(data, filters, page, limit) {
       
       if(filters?.genre) {
         if(!Array.isArray(filters.genre)) {
-          error = `${error.errorMessage} genre not array`
+          error.errorMessage = `${error.errorMessage} genre not array`
         } else {
           let checkTypeOfArrayGenre = filters.genre.every(item => typeof item === 'string');             
           if (!checkTypeOfArrayGenre) {
-               error = `${error.errorMessage} genre has not string in array`
+               error.errorMessage = `${error.errorMessage} genre has not string in array`
           }
         }
       }
 
       if(filters?.tags) {
         if(!Array.isArray(filters.tags)) {
-          error = `${error.errorMessage} tags not array`
+          error.errorMessage = `${error.errorMessage} tags not array`
         } else {
           let checkTypeOfArrayTags = filters.tags.every(item => typeof item === 'string');             
           if (!checkTypeOfArrayTags) {
-               error = `${error.errorMessage} tags has not string in array`
+               error.errorMessage = `${error.errorMessage} tags has not string in array`
           }
         }
       }
 
       if(filters?.pages) {
         if(typeof filters.pages !== "number") {
-          error = `${error.errorMessage} pages has not number in object`
+          error.errorMessage = `${error.errorMessage} pages has not number in object`
         }
       }
 
       if(filters?.rating) {
         if(typeof filters.rating !== "number") {
-          error = `${error.errorMessage} rating has not number in object`
+          error.errorMessage = `${error.errorMessage} rating has not number in object`
         }
       }
 
       if(filters?.language) {
         if(typeof filters.language !== "string") {
-          error = `${error.errorMessage} language has not string in object`
+          error.errorMessage = `${error.errorMessage} language has not string in object`
         }
       }
 
-      if(filters?.birthYear || filters?.deathYear) {
-        if(typeof filters.birthYear !== "number" 
-          || typeof filters.deathYear !== "number") {
-          error = `${error.errorMessage} year has not number in object`
-        }
-      }
-      
-      
-      if(filters?.title || filters?.notes) {
-        if(typeof filters.title !== "string") {
-          if(typeof filters.notes !== "string") {
-          error = `${error.errorMessage} title and notes has not string in object`
+      if(filters?.yearRange) {
+        if(!Array.isArray(filters.yearRange)) {
+          error.errorMessage = `${error.errorMessage} yearRange not array`
+        } else {
+          let checkTypeOfArrayYearRange = filters.yearRange.every(item => typeof item === 'number');             
+          if (!checkTypeOfArrayYearRange) {
+               error.errorMessage = `${error.errorMessage} yearRange has not number in array`
           }
         }
       }
+      
+      if(filters?.searchText) {
+        if(typeof filters.searchText !== "string") {
+          error.errorMessage = `${error.errorMessage} searchText has not string in object`
+        }
+      }
 
+      if(page) {
+          if (typeof page === "string") {
+          error.errorMessage = `${error.errorMessage} page has not number`;
+        } else if(typeof page === "number" && page >= 1) {
+          console.log("page has number")
+        }
+      }
+
+      if(limit) {
+        if (typeof limit === "string") {
+            error.errorMessage = `${error.errorMessage} limit has not number`;
+          } else if(typeof limit === "number" && limit >= 1) {
+            console.log("limit has number")
+          }
+        }
+    
       return error
 
     } catch (error) {
