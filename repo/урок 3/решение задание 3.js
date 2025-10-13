@@ -1,50 +1,77 @@
 function searchBooks(data, filters, page, limit) {
-      try {
 
-      let errors = [];
+    let errors = [];
 
-      // let error = {
-      //   errorCode: 400, 
-      //   errorMessage: 'ошибка поля'
-      // };
-      
-      if(filters?.genre) {
-        if(!Array.isArray(filters.genre)) {
-          errors.push("genre must be array")
+    let results = [];
+
+    if (filters?.genre) {
+        if (!Array.isArray(filters.genre)) {
+            errors.push("genre must be array")
         } else {
-          let checkTypeOfArrayGenre = filters.genre.every(item => typeof item === 'string');             
-          if (!checkTypeOfArrayGenre) {
-                errors.push("genre must be array")
-          }
+            let checkTypeOfArrayGenre = filters.genre.every(item => typeof item === 'string');
+            
+            if (!checkTypeOfArrayGenre) {
+                errors.push("genre must be array of strings")
+            } else {
+               results = data.books.filter(book => 
+                    filters.genre.some(genre => 
+                        book.details.genre.includes(genre)))
+            }
         }
-      }
+    }
 
-      if(filters?.tags) {
-        if(!Array.isArray(filters.tags)) {
-           errors.push("tags must be array")
-        } else {
-          let checkTypeOfArrayTags = filters.tags.every(item => typeof item === 'string');             
-          if (!checkTypeOfArrayTags) {
-                errors.push("tags must be array")
-          }
+    if (filters?.tags) {
+      if (!Array.isArray(filters.tags)) {
+          errors.push("tags must be array")
+      } else {
+        let checkTypeOfArrayTags = filters.tags.every(item => typeof item === 'string');
+            
+        if (!checkTypeOfArrayTags) {
+                errors.push("tags must be array of strings")
+            } else {
+                results = data.books.filter(book => 
+                    filters.tags.some(tag => 
+                        book.tags.includes(tag)))
+            }
         }
-      }
+    }
 
-      if(filters?.minPages) {
-        if(typeof filters.minPages !== "number") {
-           errors.push("minPages must be number")
-        }
+    if(filters?.minPages) {
+      if(typeof filters.minPages !== "number") {
+         errors.push("minPages must be number")
+      } else {
+        results = results.filter(book => {
+          if (book.details.pages >= filters.minPages) {
+            return true;
+            }
+        return false;
+        });
       }
+    }
 
-      if(filters?.maxPages) {
-        if(typeof filters.maxPages !== "number") {
-           errors.push("maxPages must be number")
-        }
+    if(filters?.maxPages) {
+      if(typeof filters.maxPages !== "number") {
+         errors.push("maxPages must be number")
+      } else {
+        results = results.filter(book => {
+          if (book.details.pages <= filters.maxPages) {
+            return true;
+            }
+        return false;
+        });
       }
+    }
 
-      if(filters?.rating) {
+      if(filters?.minRating) {
         if(typeof filters.rating !== "number") {
-           errors.push("rating must be number")
+           errors.push("minRating must be number")
+        } else {
+            results = results.filter(book => {
+              if (book.readingStats.rating >= filters.minRating) {
+                return true;
+              }
+            return false;
+          });
         }
       }
 
@@ -94,8 +121,6 @@ function searchBooks(data, filters, page, limit) {
         }
       }
 
-      let results = [];
-
       for (const book of data.books) {
 
         if(filters?.tags && !filters.tags.every(tag => book.tags.includes(tag))) {
@@ -132,11 +157,6 @@ function searchBooks(data, filters, page, limit) {
 
       }
       return 
-
-    } catch (error) {
-          console.log("Возникла ошибка!");
-          return [];
-        }
   }
 
 
