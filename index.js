@@ -10,7 +10,7 @@ const productsData = {
     itemId: "PROD-002", 
         productName: "Беспроводные наушники SoundMax Pro",
         priceValue: 12999,
-        categoryType: "АКСЕССУАРЫ"
+        categoryType: "АКСЕССУАРЫ!"
     }
   ]
 };
