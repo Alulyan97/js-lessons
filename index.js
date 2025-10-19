@@ -4,7 +4,7 @@ const productsData = {
         itemId: "PROD-001",
         productName: "Смартфон Galaxy Ultra 2024",
         priceValue: 89999,
-        categoryType: "ЭЛЕКТРОНИКА 1"
+        categoryType: "ЭЛЕКТРОНИКА 1 2"
     },
     {
     itemId: "PROD-002", 
